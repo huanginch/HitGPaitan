@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import DataContext from '../stores/Context';
 
 //load assets
-const gpaitan = '/src/assets/target.gif';
+import gpaitan from '/src/assets/target.gif';
 
 export type TargetProps = {
   id: number;

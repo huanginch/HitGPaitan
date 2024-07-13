@@ -7,7 +7,7 @@ import GameBoard from './GameBorad';
 import { TargetProps } from './Target';
 import DataContext from '../stores/Context';
 
-const soundEffect = '/src/assets/hit.mp3';
+import soundEffect from '/src/assets/hit.mp3';
 
 function Game() {
   const [targets, setTargets] = useState<TargetProps[]>([]);
