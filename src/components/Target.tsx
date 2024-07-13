@@ -3,6 +3,7 @@ import DataContext from '../stores/Context';
 
 //load assets
 import gpaitan from '/src/assets/target.gif';
+import dead from '/src/assets/dead.png';
 
 export type TargetProps = {
   id: number;
@@ -14,12 +15,16 @@ export type TargetProps = {
   gameBoardWidth: number;
   gameBoardHeight: number;
   offset: number;
-  onClick: (id: number) => (event: MouseEvent<HTMLDivElement>) => void;
+  onClick: (id: number) => void;
   onOutOfBounds: (id: number) => void;
 }
 
+
+
 function Target({ id, initialX, initialY, directionX, directionY, rotation, gameBoardWidth, gameBoardHeight, offset, onClick, onOutOfBounds }: TargetProps) {
   const [position, setPosition] = useState({ x: initialX, y: initialY });
+  const [speed, setSpeed] = useState(50);
+  const [imgUrl, setImgUrl] = useState(gpaitan);
   const { isRunning } = useContext(DataContext);
 
   useEffect(() => {
@@ -35,10 +40,22 @@ function Target({ id, initialX, initialY, directionX, directionY, rotation, game
     };
 
     if(isRunning) { // 遊戲進行中才移動目標
-      const interval = setInterval(moveTarget, 50);
+      if (Math.random() < 0.5) {
+        setSpeed(prevSpeed => prevSpeed * 0.95);
+      }
+      const interval = setInterval(moveTarget, speed);
       return () => clearInterval(interval);
     }
-  }, [gameBoardWidth, gameBoardHeight, id, onOutOfBounds, directionX, directionY, offset, isRunning]);
+  }, [gameBoardWidth, gameBoardHeight, id, onOutOfBounds, directionX, directionY, offset, isRunning, speed]);
+
+  const handleClick = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setImgUrl(dead);
+    //stop moving after click and wait for 300ms to remove the target
+    setSpeed(1000);
+    setTimeout(() => onClick(id), 300);
+  }
 
   return (
     <div
@@ -46,17 +63,17 @@ function Target({ id, initialX, initialY, directionX, directionY, rotation, game
         position: 'absolute',
         left: position.x,
         top: position.y,
-        width: 55,
-        height: 55,
+        width: 80,
+        height: 80,
         transform: `rotate(${rotation}deg)`,
-        backgroundImage: `url(${gpaitan})`,
+        backgroundImage: `url(${imgUrl})`,
         backgroundSize: 'contain',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat',
       }}
       className='overflow-hidden'
-      onMouseDown={onClick(id)}>
+      onMouseDown={handleClick}>
       </div>
   );
 }

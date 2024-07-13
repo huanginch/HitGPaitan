@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef, MouseEvent } from 'react';
+import { useState, useEffect, useContext, useRef } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay, faRotateRight, faStop } from '@fortawesome/free-solid-svg-icons';
@@ -7,7 +7,7 @@ import GameBoard from './GameBorad';
 import { TargetProps } from './Target';
 import DataContext from '../stores/Context';
 
-import soundEffect from '/src/assets/hit.mp3';
+import soundEffect from '/src/assets/hit.m4a';
 
 function Game() {
   const [targets, setTargets] = useState<TargetProps[]>([]);
@@ -30,8 +30,10 @@ function Game() {
   useEffect(() => {
     // 設置菜單初始狀態
     setMenuInfo({ title: '消滅G白湯', text:'', btnText:'開始遊戲', handleClick: startGame });
-  }
-  ,[]);
+    if(audioRef.current) {
+      audioRef.current.volume = 0.5;
+    }
+  },[]);
 
   useEffect(() => {
     if(isRunning) {
@@ -54,7 +56,7 @@ function Game() {
       const generateTarget = () => {
         // 随机选择生成边界
         const border = Math.floor(Math.random() * 4);
-        const offset = 50; // 目標大小
+        const offset = 80; // 目標大小
         let initialX, initialY, directionX, directionY;
 
         switch (border) {
@@ -124,9 +126,7 @@ function Game() {
     }
   }, [score]);
 
-  const handleTargetClick = (id: number) => (event: MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
-    event.preventDefault();
+  const handleTargetClick = (id: number) => {
     setTargets((prev) => prev.filter((target) => target.id !== id));
     setScore((prev) => prev + 1);
     if(audioRef.current) {
