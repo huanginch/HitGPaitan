@@ -32,7 +32,7 @@ function Target({ id, initialX, initialY, directionX, directionY, rotation, game
       setPosition((prev) => {
         const newX = prev.x + directionX;
         const newY = prev.y + directionY;
-        if (newX < 0 || newX > gameBoardWidth - offset || newY < 0 || newY > gameBoardHeight - offset) {
+        if (newX < 0 - offset / 2 || newX > gameBoardWidth - offset / 2 || newY < 0 - offset / 2 || newY > gameBoardHeight - offset / 2) {
           onOutOfBounds(id);
         }
         return { x: newX, y: newY };
@@ -57,7 +57,7 @@ function Target({ id, initialX, initialY, directionX, directionY, rotation, game
     setImgUrl(dead);
     //stop moving after click and wait for 300ms to remove the target
     setBaseSpeed(1000);
-    setTimeout(() => onClick(id), 300);
+    onClick(id);
   }
 
   return (

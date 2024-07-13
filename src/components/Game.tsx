@@ -30,7 +30,7 @@ function Game() {
 
   useEffect(() => {
     // 設置菜單初始狀態
-    setMenuInfo({ title: '消滅G白湯', text:'', btnText:'開始遊戲', handleClick: startGame });
+    setMenuInfo({ title: '消滅G白湯', text:'推薦開啟音效', btnText:'開始遊戲', handleClick: startGame });
     if(audioRef.current) {
       audioRef.current.volume = 0.5;
     }
@@ -128,12 +128,13 @@ function Game() {
   }, [score]);
 
   const handleTargetClick = (id: number) => {
-    setTargets((prev) => prev.filter((target) => target.id !== id));
     setScore((prev: number) => prev + 1);
     if(audioRef.current) {
       audioRef.current.play();
       audioRef.current.currentTime = 0;
     }
+    setTimeout(() => { // 等待300ms後移除目標
+    setTargets((prev) => prev.filter((target) => target.id !== id));}, 300);
   };
 
   

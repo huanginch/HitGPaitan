@@ -27,7 +27,7 @@ const GameBoard = forwardRef<HTMLDivElement, GameBoardProps>(({ targets, onDimen
   return (
     <div
      ref={innerRef}
-     className="w-[80%] lg:w-1/2 h-[75vh] lg:h-[80vh] border border-black relative"
+     className="w-[80%] lg:w-1/2 h-[75vh] lg:h-[80vh] border border-black relative overflow-hidden"
      style={{ cursor: `url(${cursor}),auto` }}
      >
       {targets.map((target) => (
