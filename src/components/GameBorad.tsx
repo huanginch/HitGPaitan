@@ -2,6 +2,7 @@ import { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import Target from './Target';
 import { TargetProps } from './Target';
 
+const cursor = '/src/assets/slipper48.png';
 interface GameBoardProps {
   targets: TargetProps[];
   onDimensionsChange: (width: number, height: number) => void;
@@ -27,7 +28,7 @@ const GameBoard = forwardRef<HTMLDivElement, GameBoardProps>(({ targets, onDimen
     <div
      ref={innerRef}
      className="w-1/2 h-[80vh] border border-black relative"
-     style={{ cursor: 'url(/src/assets/slipper48.png),auto' }}
+     style={{ cursor: `url(${cursor}),auto` }}
      >
       {targets.map((target) => (
         <Target key={`${target.id}`} {...target} />

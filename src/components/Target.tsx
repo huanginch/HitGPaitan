@@ -1,6 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 import DataContext from '../stores/Context';
 
+//load assets
+const gpaitan = '/src/assets/target.gif';
+
 export type TargetProps = {
   id: number;
   initialX: number;
@@ -49,7 +52,7 @@ function Target({ id, initialX, initialY, directionX, directionY, rotation, game
       }}
       className='overflow-hidden'
       onClick={() => onClick(id)}
-      src="/src/assets/target.gif"
+      src={gpaitan}
       alt="G" />
   );
 }

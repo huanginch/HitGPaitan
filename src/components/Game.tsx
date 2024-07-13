@@ -7,6 +7,8 @@ import GameBoard from './GameBorad';
 import { TargetProps } from './Target';
 import DataContext from '../stores/Context';
 
+const soundEffect = '/src/assets/hit.mp3';
+
 function Game() {
   const [targets, setTargets] = useState<TargetProps[]>([]);
   const [score, setScore] = useState(0);
@@ -194,7 +196,7 @@ function Game() {
         </div>
         <GameBoard targets={targets} onDimensionsChange={updateDimensions}/>
       </div>
-      <audio ref={audioRef} src="/src/assets/hit.mp3" ></audio>
+      <audio ref={audioRef} src={soundEffect} ></audio>
     </div>
   );
 }
