@@ -2,7 +2,7 @@ import { useRef, useEffect, useImperativeHandle, forwardRef } from 'react';
 import Target from './Target';
 import { TargetProps } from './Target';
 
-import cursor from '/src/assets/slipper48.png';
+import cursor from '/src/assets/slipper24.png';
 interface GameBoardProps {
   targets: TargetProps[];
   onDimensionsChange: (width: number, height: number) => void;

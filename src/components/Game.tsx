@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useEffect, useContext, useRef, MouseEvent } from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPause, faPlay, faRotateRight, faStop } from '@fortawesome/free-solid-svg-icons';
@@ -105,7 +105,7 @@ function Game() {
           onClick: handleTargetClick,
           onOutOfBounds: (id: number) => {
             setTargets((prev) => prev.filter((target) => target.id !== id));
-          },
+          }
         };
         setTargets((prev) => [...prev, {...newTarget}]);
       };
@@ -124,7 +124,9 @@ function Game() {
     }
   }, [score]);
 
-  const handleTargetClick = (id: number) => {
+  const handleTargetClick = (id: number) => (event: MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    event.preventDefault();
     setTargets((prev) => prev.filter((target) => target.id !== id));
     setScore((prev) => prev + 1);
     if(audioRef.current) {
@@ -132,6 +134,8 @@ function Game() {
       audioRef.current.currentTime = 0;
     }
   };
+
+  
 
   const startGame = () => { // 開始遊戲
     setIsRunning(true);

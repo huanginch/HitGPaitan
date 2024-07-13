@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, MouseEvent } from 'react';
 import DataContext from '../stores/Context';
 
 //load assets
@@ -14,7 +14,7 @@ export type TargetProps = {
   gameBoardWidth: number;
   gameBoardHeight: number;
   offset: number;
-  onClick: (id: number) => void;
+  onClick: (id: number) => (event: MouseEvent<HTMLDivElement>) => void;
   onOutOfBounds: (id: number) => void;
 }
 
@@ -41,19 +41,23 @@ function Target({ id, initialX, initialY, directionX, directionY, rotation, game
   }, [gameBoardWidth, gameBoardHeight, id, onOutOfBounds, directionX, directionY, offset, isRunning]);
 
   return (
-    <img
+    <div
       style={{
         position: 'absolute',
         left: position.x,
         top: position.y,
-        width: 50,
-        height: 50,
+        width: 55,
+        height: 55,
         transform: `rotate(${rotation}deg)`,
+        backgroundImage: `url(${gpaitan})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat',
       }}
       className='overflow-hidden'
-      onClick={() => onClick(id)}
-      src={gpaitan}
-      alt="G" />
+      onMouseDown={onClick(id)}>
+      </div>
   );
 }
 
