@@ -8,7 +8,6 @@ import { TargetProps } from './Target';
 import DataContext from '../stores/Context';
 
 function Game() {
-
   const [targets, setTargets] = useState<TargetProps[]>([]);
   const [score, setScore] = useState(0);
   const [time, setTime] = useState(30); // 遊戲時間30秒
@@ -113,7 +112,7 @@ function Game() {
       return () => clearInterval(interval);
     }
 
-  }, [time, isRunning, gameBoardWidth, gameBoardHeight, generateRate, setIsRunning]);
+  }, [time, isRunning, gameBoardWidth, gameBoardHeight, generateRate, setIsRunning, score]);
 
   useEffect(() => {
     
