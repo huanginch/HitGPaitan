@@ -11,16 +11,17 @@ import soundEffect from '/src/assets/hit.m4a';
 
 function Game() {
   const [targets, setTargets] = useState<TargetProps[]>([]);
-  const [score, setScore] = useState(0);
   const [time, setTime] = useState(30); // 遊戲時間30秒
-  const [generateRate, setGenerateRate] = useState(500); // 生成目標的速率[ms]
+  const [generateRate, setGenerateRate] = useState(400); // 生成目標的速率[ms]
   const [isMenuVisible, setIsMenuVisible] = useState(true); // 菜單是否可見
   const [gameBoardWidth, setGameBoardWidth] = useState(0); // 游戏区域宽度
   const [gameBoardHeight, setGameBoardHeight] = useState(0); // 游戏区域高度
-  const [menuInfo, setMenuInfo] = useState({ title: '消滅G白湯',text:'', btnText: '開始遊戲', handleClick:()=>{} }); // 菜單信息
+  const [soundOn, setSoundOn] = useState(true); // 是否開啟音效
+  const [menuInfo, setMenuInfo] = useState({
+    title: '消滅G白湯', text:'', btnText:'開始遊戲', handleClick: () => {} }); // 菜單信息
   
   const audioRef = useRef<HTMLAudioElement>(null);
-  const { isRunning, setIsRunning }  = useContext(DataContext); // 遊戲是否在運行
+  const { isRunning, setIsRunning, score, setScore }  = useContext(DataContext); // 遊戲是否在運行
 
   const updateDimensions = (width: number, height: number) => {
     setGameBoardWidth(width);
@@ -122,13 +123,13 @@ function Game() {
     
     if (score > 0 && score % 5 === 0) {
       // 每得到5分，生成速率增加，最快生成速率為300ms
-      setGenerateRate((prev) => Math.max(300, prev - 100));
+      setGenerateRate((prev) => Math.max(250, prev - 50));
     }
   }, [score]);
 
   const handleTargetClick = (id: number) => {
     setTargets((prev) => prev.filter((target) => target.id !== id));
-    setScore((prev) => prev + 1);
+    setScore((prev: number) => prev + 1);
     if(audioRef.current) {
       audioRef.current.play();
       audioRef.current.currentTime = 0;
@@ -139,7 +140,7 @@ function Game() {
 
   const startGame = () => { // 開始遊戲
     setIsRunning(true);
-    setGenerateRate(500);
+    setGenerateRate(400);
     
     //hide menu
     setIsMenuVisible(false)
@@ -147,7 +148,8 @@ function Game() {
 
   const pauseGame = () => { // 暫停遊戲
     setIsRunning(false);
-    setMenuInfo({ title: '遊戲暫停', text:'', btnText: '繼續遊戲', handleClick: startGame });
+    setMenuInfo({
+      title: '遊戲暫停', text: '', btnText: '繼續遊戲', handleClick: startGame });
 
     //show menu
     setIsMenuVisible(true)
@@ -158,13 +160,21 @@ function Game() {
     setTime(30);
     setScore(0);
     setTargets([]);
-    setGenerateRate(500);
+    setGenerateRate(400);
   };
 
   const restartGame = () => { // 重新開始遊戲
     stopGame();
     startGame();
   };
+
+  const toggleSound = () => {
+    setSoundOn(!soundOn);
+    if(audioRef.current) {
+      audioRef.current.play();
+      audioRef.current.volume = soundOn ? 0 : 0.5;
+    }
+  }
 
   return (
     <div>
@@ -194,8 +204,11 @@ function Game() {
               </button>
             )
           }
-          <button className='text-lg hover:opacity-50 transition-all ease-linear' onClick={stopGame}>
+          <button className='text-lg hover:opacity-50 transition-all ease-linear pr-5' onClick={stopGame}>
             <FontAwesomeIcon icon={faStop} />
+          </button>
+          <button className={`rounded-lg px-2 py-1 mb-2 hover:opacity-50 text-white ${soundOn ? "bg-red-500" : "bg-gray-400"}`} onClick={toggleSound}>
+            {soundOn ? "白湯閉嘴" : "白湯給我叫"}
           </button>
         </div>
         <GameBoard targets={targets} onDimensionsChange={updateDimensions}/>

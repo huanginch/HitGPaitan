@@ -1,4 +1,5 @@
 function Menu({ title, text, btnText, onClick }: { title: string, text:string, btnText:string, onClick: () => void}) {
+
   return (
     <div className="menu fixed z-[1000] w-screen h-screen bg-black opacity-70 flex flex-col items-center justify-center text-white">
       <h1 className="text-[64px] mb-5">{title}</h1>

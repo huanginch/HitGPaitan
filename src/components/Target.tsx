@@ -23,9 +23,9 @@ export type TargetProps = {
 
 function Target({ id, initialX, initialY, directionX, directionY, rotation, gameBoardWidth, gameBoardHeight, offset, onClick, onOutOfBounds }: TargetProps) {
   const [position, setPosition] = useState({ x: initialX, y: initialY });
-  const [speed, setSpeed] = useState(50);
+  const [baseSpeed, setBaseSpeed] = useState(18);
   const [imgUrl, setImgUrl] = useState(gpaitan);
-  const { isRunning } = useContext(DataContext);
+  const { isRunning, score } = useContext(DataContext);
 
   useEffect(() => {
     const moveTarget = () => {
@@ -40,20 +40,23 @@ function Target({ id, initialX, initialY, directionX, directionY, rotation, game
     };
 
     if(isRunning) { // 遊戲進行中才移動目標
-      if (Math.random() < 0.5) {
-        setSpeed(prevSpeed => prevSpeed * 0.95);
-      }
-      const interval = setInterval(moveTarget, speed);
+      const interval = setInterval(moveTarget, baseSpeed);
       return () => clearInterval(interval);
     }
-  }, [gameBoardWidth, gameBoardHeight, id, onOutOfBounds, directionX, directionY, offset, isRunning, speed]);
+  }, [gameBoardWidth, gameBoardHeight, id, onOutOfBounds, directionX, directionY, offset, isRunning, baseSpeed]);
+
+  useEffect(() => {
+    if (score > 0 && score % 10 === 0) { // Speed up every 10 points
+      setBaseSpeed((prev) => Math.max(10, prev - 3)); // Adjust the decrement as needed
+    }
+  }, [score]);
 
   const handleClick = (event: MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
     event.stopPropagation();
     setImgUrl(dead);
     //stop moving after click and wait for 300ms to remove the target
-    setSpeed(1000);
+    setBaseSpeed(1000);
     setTimeout(() => onClick(id), 300);
   }
 
